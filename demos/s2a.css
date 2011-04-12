@@ -1,0 +1,25 @@
+* {
+	padding: 0;
+	margin: 0;
+}
+body {
+	padding: 50px;
+}
+span.s2ac-current-selection {
+	padding: 0 0 0 10px;
+}
+ol.s2ac-suggestions {
+	position: absolute;
+	list-style-type: none;
+	border: 1px solid #ccc;
+	background-color: #fff;
+	display: none;
+	min-width: 120px;
+}
+ol.s2ac-suggestions li {
+	padding: 5px 10px;
+}
+ol.s2ac-suggestions li.s2ac-active {
+	background-color: #ccc;
+	color: #fff;
+}
