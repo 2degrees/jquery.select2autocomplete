@@ -53,6 +53,18 @@ $.widget('ui.select2autocomplete', {
             return false;
         });
         
+        this.suggestions.css({position: 'absolute'}).zIndex(this.element.zIndex() + 1);
+        
+        if ($.fn.bgiframe) {
+            this.suggestions.bgiframe();
+        }
+        
+        // Bind an event on to the window resize to ensure that the suggestions
+        // are always aligned correctly:
+        $(window).bind('resize.select2autocomplete', function(event){
+            self._align_suggestions.apply(self);
+        });
+        
         // Iterate over the options in the select and convert them into an a
         // sorted list of lower-case labels and an object of values keyed off
         // the label (real case!):
@@ -108,7 +120,7 @@ $.widget('ui.select2autocomplete', {
                     }
                     return;
             }
-            
+            self._align_suggestions.apply(self);
             self.suggestions.children().remove().end().show();
             
             if (!current_value || /^\W+$/.test(current_value)) {
@@ -144,7 +156,6 @@ $.widget('ui.select2autocomplete', {
                     // Update the currently selected label:
                     self.current_selection.text(label);
                     
-                    // Hide the suggestions:
                     self.hide_suggestions();
                     
                     self.input.val('');
@@ -175,6 +186,7 @@ $.widget('ui.select2autocomplete', {
         this.input.remove();
         this.current_selection.remove();
         this.element_label.unbind('.select2autocomplete');
+        $(window).unbind('.select2autocomplete');
         
         // restore the tabindex (if one was specified):
         if (this._tabindex) {
@@ -237,6 +249,13 @@ $.widget('ui.select2autocomplete', {
     _make_random_id: function () {
         // make a random ID for when no ID is set on the original select:
         return Math.random().toString(16).slice(2, 10);
+    },
+    _align_suggestions: function () {
+        // Align the suggestions to the input box
+        var offset = this.input.offset(),
+            delta_y = this.input.outerHeight();
+        
+        this.suggestions.css({top: offset.top + delta_y, left: offset.left});
     }
 });
 
