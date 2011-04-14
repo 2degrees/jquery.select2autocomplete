@@ -26,7 +26,8 @@ $.widget('ui.select2autocomplete', {
 	},
 	_create: function () {
 		var has_initial_selection = false,
-		    self = this;
+		    self = this,
+			prevent_keypress = false;
             
 		this.labels_by_value = {};
 		this.id = this.element.attr('id') || this._make_random_id(); 
@@ -87,6 +88,7 @@ $.widget('ui.select2autocomplete', {
 					if ($active_option.length) {
 					    // Ensure that we don't get any accidental form submission:
 						event.preventDefault();
+						prevent_keypress = false;
 						$active_option.trigger('mousedown');
 					}
                     return;
@@ -137,6 +139,15 @@ $.widget('ui.select2autocomplete', {
             });
             
             self.suggestions.append.apply(self.suggestions, results);
+		}).bind('keydown.select2autocomplete', function (event) {
+			if (event.keyCode == $.ui.keyCode.ENTER || event.keyCode == $.ui.keyCode.NUMPAD_ENTER) {
+				prevent_keypress = true;
+			}
+        }).bind('keypress.select2autocomplete', function (event) {
+            if (prevent_keypress) {
+                event.preventDefault();
+                prevent_keypress = false;
+            }
 		}).bind('blur.select2autocomplete', function (event) {
 			self.closing = setTimeout(function () {
                 self.hide_suggestions();
