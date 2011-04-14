@@ -29,13 +29,13 @@ $.widget('ui.select2autocomplete', {
             self = this,
             prevent_keypress = false;
             
-        this.labels_by_value = {};
+        this.values_by_label = {};
         this.id = this.element.attr('id') || this._make_random_id(); 
         this.current_selection = $('<span />').addClass('s2ac-current-selection');
-        this.input = $('<input />').addClass('s2ac-input').attr("autocomplete", "off");
+        this.input = $('<input />').addClass('s2ac-input').attr('autocomplete', 'off');
         this.suggestions = $('<ol />').addClass('s2ac-suggestions');
         this._tabindex = this.element.attr('tabindex');
-        this.element_label = $('label[for='+this.id+']');
+        this.element_label = $('label[for=' + this.id + ']');
         
         this.element.hide()
                     .after(this.input, this.suggestions, this.current_selection);
@@ -65,7 +65,7 @@ $.widget('ui.select2autocomplete', {
                 // we can't have blank labels (or indeed undefined labels:
                 $.error('Cannot continue with setting up autocomplete - missing option label for value "' + value + '"');                           
             }
-            self.labels_by_value[value] = label;
+            self.values_by_label[label] = value;
             
             // See whether we need to set the currently chosen option:
             if (!has_initial_selection && $option.attr('selected')) {
@@ -182,14 +182,14 @@ $.widget('ui.select2autocomplete', {
         }
     },
     search: function(label) {
-        // Search for ``value`` in the ``labels_by_value`` and return the first
+        // Search for ``value`` in the ``values_by_label`` and return the first
         // ``max_hits`` (value, label) pairs which correspond to the match
         
         var max_hits = this.options.max_suggestions,
             lower_label = label.toLowerCase(), 
             found_values = [];
         
-        $.each(this.labels_by_value, function (value, consider_label) {
+        $.each(this.values_by_label, function (consider_label, value) {
             
             if (consider_label.toLowerCase().indexOf(lower_label) !== -1) {
                 found_values.push([value, consider_label]);
