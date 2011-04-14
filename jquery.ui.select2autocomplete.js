@@ -63,7 +63,8 @@ $.widget('ui.select2autocomplete', {
 			var results = [],
                 current_value = self.input.val(),
 				keyCode = $.ui.keyCode,
-				active_option;
+				active_option,
+				hits;
 
 			switch (event.keyCode) {
                 case keyCode.UP:
@@ -95,10 +96,19 @@ $.widget('ui.select2autocomplete', {
             
             if (!current_value || /^\W+$/.test(current_value)) {
                 // don't bother to search as the value is just whitespace:
+				self.hide_suggestions();
                 return;
             }
+			
+			hits = self.search(current_value);
+			
+			if (!hits.length) {
+				// if there are no hits, hide the suggestions:
+				self.hide_suggestions();
+                return;
+			}
             
-            $.each(self.search(current_value), function (index, result) {
+            $.each(hits, function (index, result) {
                 var $result = $('<li />', {'class': 's2ac-result', 'data-value': result[0], text: result[1]});
                 $result.bind('mousedown.select2autocomplete', function (event) {
 					setTimeout(function () {
