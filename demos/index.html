@@ -7,27 +7,120 @@
 <script type="text/javascript" src="../jquery.ui.select2autocomplete.js"></script>
 <script type="text/javascript">
 $(function () {
-	$('select').select2autocomplete();
+	$('#simple').select2autocomplete();
+    $('#tabindex').select2autocomplete();
+    $('#max-hits').select2autocomplete({max_suggestions: 5});
+    $('#initial').select2autocomplete();
 });
 </script>
 <link rel="stylesheet" type="text/css" href="s2a.css" media="all" />
 </head>
 <body>
-<h1>Demos for jquery.select2autocomplete</h1>
-<br />
-<form action=".">
-    <select name="n">
-    	<option value="1">One</option>
-		<option value="2">Two</option>
-		<option value="3">Three</option>
-		<option value="4">Four</option>
-		<option value="5">Five</option>
-		<option value="6">Six</option>
-		<option value="7">Seven</option>
-		<option value="8">Eight</option>
-		<option value="9">Nine</option>
-		<option value="10">Ten</option>
-    </select>
-</form>
+    <header>
+        <h1>Demos for jquery.select2autocomplete</h1>
+    </header>
+    <br />
+    <section id="basic-example">
+        <h2>Basic example</h2>
+        <p>In the basic example, the default number of suggestions will be made (10).</p>
+        <form action=".">
+            <select name="n" id="simple">
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+                <option value="4">Four</option>
+                <option value="5">Five</option>
+                <option value="6">Six</option>
+                <option value="7">Seven</option>
+                <option value="8">Eight</option>
+                <option value="9">Nine</option>
+                <option value="10">Ten</option>
+            </select>
+        </form>
+        <code>$('#simple').select2autocomplete();</code>
+    </section>
+    
+    <section id="max_hits-example">
+        <h2>max_suggestions option</h2>
+        <p>The maximum number of suggestions the widget will pull back is determined by the Max_hits option when setting up the widget. The example has lots of US cities beginning with <strong>A</strong></p>
+        <form action=".">
+            <select id="max-hits">
+                <option value="Aastad township">Aastad township</option>
+                <option value="Abbeville County">Abbeville County</option>
+                <option value="Abbeville city">Abbeville city</option>
+                <option value="Abbeville town">Abbeville town</option>
+                <option value="Abbot town">Abbot town</option>
+                <option value="Abbotsford city">Abbotsford city</option>
+                <option value="Abbotsford city (pt.)">Abbotsford city (pt.)</option>
+                <option value="Abbott city">Abbott city</option>
+                <option value="Abbott township">Abbott township</option>
+                <option value="Abbottstown borough">Abbottstown borough</option>
+                <option value="Abbyville city">Abbyville city</option>
+                <option value="Abercrombie city">Abercrombie city</option>
+                <option value="Abercrombie township">Abercrombie township</option>
+                <option value="Aberdeen city">Aberdeen city</option>
+                <option value="Aberdeen town">Aberdeen town</option>
+                <option value="Aberdeen township">Aberdeen township</option>
+                <option value="Aberdeen village">Aberdeen village</option>
+                <option value="Abernathy city">Abernathy city</option>
+                <option value="Abernathy city (pt.)">Abernathy city (pt.)</option>
+                <option value="Abie village">Abie village</option>
+                <option value="Abilene city">Abilene city</option>
+                <option value="Abilene city (pt.)">Abilene city (pt.)</option>
+                <option value="Abingdon city">Abingdon city</option>
+                <option value="Abingdon city (pt.)">Abingdon city (pt.)</option>
+                <option value="Abingdon town">Abingdon town</option>
+                <option value="Abington town">Abington town</option>
+                <option value="Abington township">Abington township</option>
+                <option value="Abita Springs town">Abita Springs town</option>
+                <option value="Aboite township">Aboite township</option>
+                <option value="Abrams town">Abrams town</option>
+                <option value="Absecon city">Absecon city</option>
+                <option value="Acadia Parish">Acadia Parish</option>
+                <option value="Accident town">Accident town</option>
+            </select>
+        </form>
+        <code>$('#max-hits').select2autocomplete({max_suggestions: 5});</code>
+    </section>
+    
+    <section id="initial-example">
+        <h2>initially selected</h2>
+        <p>The initial value of the select is used to populate the widget's inital value</p>
+        <form action=".">
+            <select name="n" id="initial">
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+                <option value="4">Four</option>
+                <option value="5" selected="selected">Five</option>
+                <option value="6">Six</option>
+                <option value="7">Seven</option>
+                <option value="8">Eight</option>
+                <option value="9">Nine</option>
+                <option value="10">Ten</option>
+            </select>
+        </form>
+        <code>$('#initial').select2autocomplete();</code>
+    </section>
+    
+    <section id="tabindex-example">
+        <h2>Tabindex</h2>
+        <p>The tabindex of the original select is copied on to the created input element. If you inspect the generated input you'll see that the tabindex of <em>5</em> has been moved on to the input element</p>
+        <form action=".">
+            <select name="n" id="tabindex" tabindex="5">
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+                <option value="4">Four</option>
+                <option value="5">Five</option>
+                <option value="6">Six</option>
+                <option value="7">Seven</option>
+                <option value="8">Eight</option>
+                <option value="9">Nine</option>
+                <option value="10">Ten</option>
+            </select>
+        </form>
+        <code>$('#tabindex').select2autocomplete();</code>
+    </section>
 </body>
 </html>

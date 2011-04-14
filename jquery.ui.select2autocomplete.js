@@ -34,9 +34,16 @@ $.widget('ui.select2autocomplete', {
         this.current_selection = $('<span />').addClass('s2ac-current-selection');
         this.input = $('<input />').addClass('s2ac-input').attr("autocomplete", "off");
         this.suggestions = $('<ol />').addClass('s2ac-suggestions');
+        this._tabindex = this.element.attr('tabindex');
         
         this.element.hide()
                     .after(this.input, this.suggestions, this.current_selection);
+        
+        // Copy any tabindex value over from the original to the input element:
+        if (this._tabindex) {
+            this.element.removeAttr('tabindex');
+            this.input.attr({tabindex: this._tabindex});
+        }
         
         // Iterate over the options in the select and convert them into an a
         // sorted list of lower-case labels and an object of values keyed off
@@ -159,6 +166,11 @@ $.widget('ui.select2autocomplete', {
         this.suggestions.remove();
         this.input.remove();
         this.current_selection.remove();
+        
+        // restore the tabindex (if one was specified):
+        if (this._tabindex) {
+            this.element.attr({tabindex: this._tabindex});
+        }
     },
     search: function(label) {
         // Search for ``value`` in the ``labels_by_value`` and return the first
