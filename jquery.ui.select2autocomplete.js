@@ -34,8 +34,8 @@ $.widget('ui.select2autocomplete', {
         this.current_selection = $('<span />').addClass('s2ac-current-selection');
         this.input = $('<input />').addClass('s2ac-input').attr('autocomplete', 'off');
         this.suggestions = $('<ol />').addClass('s2ac-suggestions');
-        this._tabindex = this.element.attr('tabindex');
         this.element_label = $('label[for=' + this.id + ']');
+        this._tabindex = this.element.attr('tabindex');
         
         this.element.hide()
                     .after(this.input, this.suggestions, this.current_selection);
@@ -49,15 +49,21 @@ $.widget('ui.select2autocomplete', {
         // If there is a label for the original select capture the click event
         // on that and focus on the generated input:
         this.element_label.bind('click.select2autocomplete', function (event) {
-            self.input.focus();
+            self.start_input_capture();
             return false;
         });
         
-        this.suggestions.css({position: 'absolute'}).zIndex(this.element.zIndex() + 1);
-        
+        this.suggestions.css({position: 'absolute'})
+                        .zIndex(this.element.zIndex() + 1);
+                        
         if ($.fn.bgiframe) {
             this.suggestions.bgiframe();
         }
+        
+        this.stop_input_capture();
+        this.current_selection.bind('click.select2autocomplete', function (event) {
+            self.start_input_capture.apply(self);
+        });
         
         // Bind an event on to the window resize to ensure that the suggestions
         // are always aligned correctly:
@@ -74,7 +80,7 @@ $.widget('ui.select2autocomplete', {
                 value = $option.val();
             
             if (!label) {
-                // we can't have blank labels (or indeed undefined labels:
+                // we can't have blank labels (or indeed any falsey label):
                 $.error('Cannot continue with setting up autocomplete - missing option label for value "' + value + '"');                           
             }
             self.values_by_label[label] = value;
@@ -85,13 +91,12 @@ $.widget('ui.select2autocomplete', {
                 has_initial_selection = true;
             }
         });
-            
-        // bind all events:
+        
         self.input.bind('keyup.select2autocomplete', function (event) {
             var results = [],
                 current_value = self.input.val(),
                 keyCode = $.ui.keyCode,
-                active_option,
+                $active_option,
                 hits;
 
             switch (event.keyCode) {
@@ -105,6 +110,7 @@ $.widget('ui.select2autocomplete', {
                     return;
                 case keyCode.ESCAPE:
                     self.hide_suggestions();
+                    self.stop_input_capture();
                     return;
                 case keyCode.ENTER:
                 case keyCode.NUMPAD_ENTER:
@@ -157,6 +163,7 @@ $.widget('ui.select2autocomplete', {
                     self.current_selection.text(label);
                     
                     self.hide_suggestions();
+                    self.stop_input_capture();
                     
                     self.input.val('');
                     
@@ -166,11 +173,12 @@ $.widget('ui.select2autocomplete', {
             
             self.suggestions.append.apply(self.suggestions, results);
         }).bind('keydown.select2autocomplete', function (event) {
-            if (event.keyCode == $.ui.keyCode.ENTER || event.keyCode == $.ui.keyCode.NUMPAD_ENTER) {
+            if (event.keyCode === $.ui.keyCode.ENTER || event.keyCode === $.ui.keyCode.NUMPAD_ENTER) {
                 prevent_keypress = true;
             }
         }).bind('keypress.select2autocomplete', function (event) {
             if (prevent_keypress) {
+                // Need to stop the form being accidentally submitted:
                 event.preventDefault();
                 prevent_keypress = false;
             }
@@ -216,11 +224,24 @@ $.widget('ui.select2autocomplete', {
     hide_suggestions: function () {
         this.suggestions.hide().html('');
     },
+    start_input_capture: function () {
+        var this_input = this.input; 
+        this_input.val('').show();
+        this.current_selection.hide();
+        
+        // Trigger focus once enough time has elapsed for the DOM to have been updated: 
+        setTimeout(function () {
+            this_input.focus();
+        }, 50);
+    },
+    stop_input_capture: function () {
+        this.current_selection.show();
+        this.input.hide();
+    },
     set_selection: function (shift) {
         var $children = this.suggestions.children(), 
             shift = $.type(shift) === 'number' ? shift : 1,
             choice_count = $children.length,
-            current_index,
             is_selection_moved = false,
             new_index = -1;
         
@@ -240,14 +261,14 @@ $.widget('ui.select2autocomplete', {
             }
         });
         
-        new_index = (new_index >= 0) ? new_index : 0
+        new_index = (new_index >= 0) ? new_index : 0;
         $children.eq(new_index).addClass('s2ac-active');
     },
     _debug: function () {
         window.console && console.debug.apply(console, arguments);
     },
     _make_random_id: function () {
-        // make a random ID for when no ID is set on the original select:
+        // Make a random ID for when no ID is set on the original select
         return Math.random().toString(16).slice(2, 10);
     },
     _align_suggestions: function () {
