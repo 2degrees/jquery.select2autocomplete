@@ -38,7 +38,9 @@ $.widget('ui.select2autocomplete', {
         this._tabindex = this.element.attr('tabindex');
         
         this.element.hide()
-                    .after(this.input, this.suggestions, this.current_selection);
+                    .after(this.input, this.current_selection);
+        
+        $('body').append(this.suggestions);
         
         // Copy any tabindex value over from the original to the input element:
         if (this._tabindex) {
