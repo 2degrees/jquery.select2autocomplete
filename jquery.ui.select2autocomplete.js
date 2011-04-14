@@ -35,6 +35,7 @@ $.widget('ui.select2autocomplete', {
         this.input = $('<input />').addClass('s2ac-input').attr("autocomplete", "off");
         this.suggestions = $('<ol />').addClass('s2ac-suggestions');
         this._tabindex = this.element.attr('tabindex');
+        this.element_label = $('label[for='+this.id+']');
         
         this.element.hide()
                     .after(this.input, this.suggestions, this.current_selection);
@@ -44,6 +45,13 @@ $.widget('ui.select2autocomplete', {
             this.element.removeAttr('tabindex');
             this.input.attr({tabindex: this._tabindex});
         }
+        
+        // If there is a label for the original select capture the click event
+        // on that and focus on the generated input:
+        this.element_label.bind('click.select2autocomplete', function (event) {
+            self.input.focus();
+            return false;
+        });
         
         // Iterate over the options in the select and convert them into an a
         // sorted list of lower-case labels and an object of values keyed off
@@ -166,6 +174,7 @@ $.widget('ui.select2autocomplete', {
         this.suggestions.remove();
         this.input.remove();
         this.current_selection.remove();
+        this.element_label.unbind('.select2autocomplete');
         
         // restore the tabindex (if one was specified):
         if (this._tabindex) {

@@ -8,9 +8,10 @@
 <script type="text/javascript">
 $(function () {
 	$('#simple').select2autocomplete();
-    $('#tabindex').select2autocomplete();
     $('#max-hits').select2autocomplete({max_suggestions: 5});
     $('#initial').select2autocomplete();
+    $('#tabindex').select2autocomplete();
+    $('#get-focus').select2autocomplete();
 });
 </script>
 <link rel="stylesheet" type="text/css" href="s2a.css" media="all" />
@@ -122,5 +123,27 @@ $(function () {
         </form>
         <code>$('#tabindex').select2autocomplete();</code>
     </section>
+    
+    <section id="basic-example">
+        <h2>Focus example</h2>
+        <p>In the basic example, the default number of suggestions will be made (10).</p>
+        <form action=".">
+            <label for="get-focus">Number:</label>
+            <select name="n" id="get-focus">
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+                <option value="4">Four</option>
+                <option value="5">Five</option>
+                <option value="6">Six</option>
+                <option value="7">Seven</option>
+                <option value="8">Eight</option>
+                <option value="9">Nine</option>
+                <option value="10">Ten</option>
+            </select>
+        </form>
+        <code>$('#get-focus').select2autocomplete();</code>
+    </section>
+    
 </body>
 </html>
