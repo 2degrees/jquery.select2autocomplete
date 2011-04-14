@@ -21,26 +21,26 @@
 (function($, undefined) {
 
 $.widget('ui.select2autocomplete', {
-	options: {
-		max_suggestions: 10
-	},
-	_create: function () {
-		var has_initial_selection = false,
-		    self = this,
-			prevent_keypress = false;
+    options: {
+        max_suggestions: 10
+    },
+    _create: function () {
+        var has_initial_selection = false,
+            self = this,
+            prevent_keypress = false;
             
-		this.labels_by_value = {};
-		this.id = this.element.attr('id') || this._make_random_id(); 
-		this.current_selection = $('<span />').addClass('s2ac-current-selection');
+        this.labels_by_value = {};
+        this.id = this.element.attr('id') || this._make_random_id(); 
+        this.current_selection = $('<span />').addClass('s2ac-current-selection');
         this.input = $('<input />').addClass('s2ac-input').attr("autocomplete", "off");
-		this.suggestions = $('<ol />').addClass('s2ac-suggestions');
-		
-		this.element.hide()
-		            .after(this.input, this.suggestions, this.current_selection);
-		
-		// Iterate over the options in the select and convert them into an a
-		// sorted list of lower-case labels and an object of values keyed off
-		// the label (real case!):
+        this.suggestions = $('<ol />').addClass('s2ac-suggestions');
+        
+        this.element.hide()
+                    .after(this.input, this.suggestions, this.current_selection);
+        
+        // Iterate over the options in the select and convert them into an a
+        // sorted list of lower-case labels and an object of values keyed off
+        // the label (real case!):
         this.element.children('option').each(function (index, option) {
             var $option = $(option),
                 label = $option.text(),
@@ -57,40 +57,40 @@ $.widget('ui.select2autocomplete', {
                 self.current_selection.text(label);
                 has_initial_selection = true;
             }
-		});
-			
-		// bind all events:
+        });
+            
+        // bind all events:
         self.input.bind('keyup.select2autocomplete', function (event) {
-			var results = [],
+            var results = [],
                 current_value = self.input.val(),
-				keyCode = $.ui.keyCode,
-				active_option,
-				hits;
+                keyCode = $.ui.keyCode,
+                active_option,
+                hits;
 
-			switch (event.keyCode) {
+            switch (event.keyCode) {
                 case keyCode.UP:
                     self.set_selection(-1);
-					event.preventDefault();
+                    event.preventDefault();
                     return;
                 case keyCode.DOWN:
                     self.set_selection(1);
-					event.preventDefault();
+                    event.preventDefault();
                     return;
                 case keyCode.ESCAPE:
                     self.hide_suggestions();
                     return;
                 case keyCode.ENTER:
-				case keyCode.NUMPAD_ENTER:
-				    
-					// If there is a currently active suggestion, select it:
-					$active_option = self.suggestions.children('.s2ac-active');
-					
-					if ($active_option.length) {
-					    // Ensure that we don't get any accidental form submission:
-						event.preventDefault();
-						prevent_keypress = false;
-						$active_option.trigger('mousedown');
-					}
+                case keyCode.NUMPAD_ENTER:
+                    
+                    // If there is a currently active suggestion, select it:
+                    $active_option = self.suggestions.children('.s2ac-active');
+                    
+                    if ($active_option.length) {
+                        // Ensure that we don't get any accidental form submission:
+                        event.preventDefault();
+                        prevent_keypress = false;
+                        $active_option.trigger('mousedown');
+                    }
                     return;
             }
             
@@ -98,69 +98,69 @@ $.widget('ui.select2autocomplete', {
             
             if (!current_value || /^\W+$/.test(current_value)) {
                 // don't bother to search as the value is just whitespace:
-				self.hide_suggestions();
+                self.hide_suggestions();
                 return;
             }
-			
-			hits = self.search(current_value);
-			
-			if (!hits.length) {
-				// if there are no hits, hide the suggestions:
-				self.hide_suggestions();
+            
+            hits = self.search(current_value);
+            
+            if (!hits.length) {
+                // if there are no hits, hide the suggestions:
+                self.hide_suggestions();
                 return;
-			}
+            }
             
             $.each(hits, function (index, result) {
                 var $result = $('<li />', {'class': 's2ac-result', 'data-value': result[0], text: result[1]});
                 $result.bind('mousedown.select2autocomplete', function (event) {
-					setTimeout(function () {
-						clearTimeout(self.closing);
-						}, 13);
-					
-					var value_to_select = $result.attr('data-value'),
-					    label = $result.text();
-					
-					// Unselect the currently selected option:
-					self.element.children(':selected').removeAttr('selected');
-					
-					// Select the new item:
-					self.element.children('[value=' + value_to_select + ']').attr('selected', 'selected');
-					
-					// Update the currently selected label:
-					self.current_selection.text(label);
-					
-					// Hide the suggestions:
-					self.hide_suggestions();
-					
-					self.input.val('');
-					
-				});
+                    setTimeout(function () {
+                        clearTimeout(self.closing);
+                        }, 13);
+                    
+                    var value_to_select = $result.attr('data-value'),
+                        label = $result.text();
+                    
+                    // Unselect the currently selected option:
+                    self.element.children(':selected').removeAttr('selected');
+                    
+                    // Select the new item:
+                    self.element.children('[value=' + value_to_select + ']').attr('selected', 'selected');
+                    
+                    // Update the currently selected label:
+                    self.current_selection.text(label);
+                    
+                    // Hide the suggestions:
+                    self.hide_suggestions();
+                    
+                    self.input.val('');
+                    
+                });
                 results.push($result);
             });
             
             self.suggestions.append.apply(self.suggestions, results);
-		}).bind('keydown.select2autocomplete', function (event) {
-			if (event.keyCode == $.ui.keyCode.ENTER || event.keyCode == $.ui.keyCode.NUMPAD_ENTER) {
-				prevent_keypress = true;
-			}
+        }).bind('keydown.select2autocomplete', function (event) {
+            if (event.keyCode == $.ui.keyCode.ENTER || event.keyCode == $.ui.keyCode.NUMPAD_ENTER) {
+                prevent_keypress = true;
+            }
         }).bind('keypress.select2autocomplete', function (event) {
             if (prevent_keypress) {
                 event.preventDefault();
                 prevent_keypress = false;
             }
-		}).bind('blur.select2autocomplete', function (event) {
-			self.closing = setTimeout(function () {
+        }).bind('blur.select2autocomplete', function (event) {
+            self.closing = setTimeout(function () {
                 self.hide_suggestions();
             }, 150);
-		});
-	},
-	_destroy: function() {
-		this.element.show();
-		this.suggestions.remove();
-		this.input.remove();
-		this.current_selection.remove();
-	},
-	search: function(label) {
+        });
+    },
+    _destroy: function() {
+        this.element.show();
+        this.suggestions.remove();
+        this.input.remove();
+        this.current_selection.remove();
+    },
+    search: function(label) {
         // Search for ``value`` in the ``labels_by_value`` and return the first
         // ``max_hits`` (value, label) pairs which correspond to the match
         
@@ -179,21 +179,21 @@ $.widget('ui.select2autocomplete', {
         });
         
         return found_values;
-	},
-	hide_suggestions: function () {
+    },
+    hide_suggestions: function () {
         this.suggestions.hide().html('');
     },
-	set_selection: function (shift) {
+    set_selection: function (shift) {
         var $children = this.suggestions.children(), 
             shift = $.type(shift) === 'number' ? shift : 1,
             choice_count = $children.length,
             current_index,
-			is_selection_moved = false,
+            is_selection_moved = false,
             new_index = -1;
         
         $children.each(function(index, child) {
             var $child = $(child);
-			
+            
             if ($child.hasClass('s2ac-active')) {
                 is_selection_moved = true;
                 new_index = (index + shift) % choice_count;
@@ -210,10 +210,10 @@ $.widget('ui.select2autocomplete', {
         new_index = (new_index >= 0) ? new_index : 0
         $children.eq(new_index).addClass('s2ac-active');
     },
-	_debug: function () {
-		window.console && console.debug.apply(console, arguments);
-	},
-	_make_random_id: function () {
+    _debug: function () {
+        window.console && console.debug.apply(console, arguments);
+    },
+    _make_random_id: function () {
         // make a random ID for when no ID is set on the original select:
         return Math.random().toString(16).slice(2, 10);
     }
