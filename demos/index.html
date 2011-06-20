@@ -12,6 +12,29 @@ $(function () {
     $('#initial').select2autocomplete();
     $('#tabindex').select2autocomplete();
     $('#get-focus').select2autocomplete();
+    $('#destroy-me').select2autocomplete();
+    $('#destroy-me').select2autocomplete('destroy');
+    
+    var $sync_me = $('#sync-me'),
+    	$sync_status = $('#sync-status');
+    $('#add-random').click(function () {
+    	var random_label = '',
+    		random_char,
+    		$option;
+    	
+    	for (var c=0; c<10; c++) {
+    		random_char = String.fromCharCode(parseInt(Math.random() * (122 - 48) + 48));
+    		random_label += random_char;
+    	}
+    	
+    	$option = $('<option/>', {value: random_label, text: random_label});
+    	$sync_me.append($option);
+    	$sync_status.text('Added option "' + random_label + '"');
+    	
+    	$sync_me.select2autocomplete('sync');
+    });
+    
+    $sync_me.select2autocomplete();
 });
 </script>
 <link rel="stylesheet" type="text/css" href="s2a.css" media="all" />
@@ -124,9 +147,9 @@ $(function () {
         <code>$('#tabindex').select2autocomplete();</code>
     </section>
     
-    <section id="basic-example">
+    <section id="focus-example">
         <h2>Focus example</h2>
-        <p>In the basic example, the default number of suggestions will be made (10).</p>
+        <p>Clicking on the corresponding label triggers the focus() event on the widget.</p>
         <form action=".">
             <label for="get-focus">Number:</label>
             <select name="n" id="get-focus">
@@ -143,6 +166,48 @@ $(function () {
             </select>
         </form>
         <code>$('#get-focus').select2autocomplete();</code>
+    </section>
+    
+    <section id="destroy-example">
+        <h2>Destruction example</h2>
+        <p>The autocomplete can be created and then destroyed.</p>
+        <form action=".">
+            <select name="n" id="destroy-me">
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+                <option value="4">Four</option>
+                <option value="5">Five</option>
+                <option value="6">Six</option>
+                <option value="7">Seven</option>
+                <option value="8">Eight</option>
+                <option value="9">Nine</option>
+                <option value="10">Ten</option>
+            </select>
+        </form>
+        <code>$('#destroy-me').select2autocomplete();<br/>$('#destroy-me').select2autocomplete('destroy');</code>
+    </section>
+    
+    <section id="sync-example">
+        <h2>Sync example</h2>
+        <p>For situations where the underlying select changes, calling the <em>sync</em> method cuases the data to be synced between the select and the widget.</p>
+        <form action=".">
+        	<input type="button" id="add-random" value="Add random data" />
+            <select name="n" id="sync-me">
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+                <option value="4">Four</option>
+                <option value="5">Five</option>
+                <option value="6">Six</option>
+                <option value="7">Seven</option>
+                <option value="8">Eight</option>
+                <option value="9">Nine</option>
+                <option value="10">Ten</option>
+            </select>
+        </form>
+        <p id="sync-status"></p>
+        <code>$('#sync-me').select2autocomplete();<br/>$('#sync-me').select2autocomplete('sync');</code>
     </section>
     
 </body>

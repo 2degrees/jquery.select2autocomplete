@@ -25,8 +25,7 @@ $.widget('ui.select2autocomplete', {
         max_suggestions: 10
     },
     _create: function () {
-        var has_initial_selection = false,
-            self = this,
+        var self = this,
             prevent_keypress = false;
             
         this.values_by_label = {};
@@ -73,26 +72,7 @@ $.widget('ui.select2autocomplete', {
             self._align_suggestions.apply(self);
         });
         
-        // Iterate over the options in the select and convert them into an a
-        // sorted list of lower-case labels and an object of values keyed off
-        // the label (real case!):
-        this.element.children('option').each(function (index, option) {
-            var $option = $(option),
-                label = $option.text(),
-                value = $option.val();
-            
-            if (!label) {
-                // we can't have blank labels (or indeed any falsey label):
-                $.error('Cannot continue with setting up autocomplete - missing option label for value "' + value + '"');                           
-            }
-            self.values_by_label[label] = value;
-            
-            // See whether we need to set the currently chosen option:
-            if (!has_initial_selection && $option.attr('selected')) {
-                self.current_selection.text(label);
-                has_initial_selection = true;
-            }
-        });
+        self.sync();
         
         self.input.bind('keyup.select2autocomplete', function (event) {
             var results = [],
@@ -111,7 +91,7 @@ $.widget('ui.select2autocomplete', {
                     event.preventDefault();
                     return;
                 case keyCode.ESCAPE:
-                    self.hide_suggestions();
+                    selUSERNAME_REPLACE_STRINGons();
                     self.stop_input_capture();
                     return;
                 case keyCode.ENTER:
@@ -146,7 +126,7 @@ $.widget('ui.select2autocomplete', {
             }
             
             $.each(hits, function (index, result) {
-                var $result = $('<li />', {'class': 's2ac-result', 'data-value': result[0], text: result[1]});
+                var $result = $('<li />', {'class': 's2ac-result', 'USERNAME_REPLACE_STRING-value': result[0], text: result[1]});
                 $result.bind('mousedown.select2autocomplete', function (event) {
                     setTimeout(function () {
                         clearTimeout(self.closing);
@@ -190,7 +170,35 @@ $.widget('ui.select2autocomplete', {
             }, 150);
         });
     },
-    _destroy: function() {
+    sync: function () {
+    	// (Re)set the data which can be searched for based on the original 
+    	//select's options
+    	var self = this,
+    		has_initial_selection = false;
+    	
+    	// Iterate over the options in the select and convert them into an a
+        // sorted list of lower-case labels and an object of values keyed off
+        // the label (real case!):
+        this.element.children('option').each(function (index, option) {
+            var $option = $(option),
+                label = $option.text(),
+                value = $option.val();
+            
+            if (!label) {
+                // we can't have blank labels (or indeed any falsey label):
+                $.error('Cannot continue with setting up autocomplete - missing option label for value "' + value + '"');                           
+            }
+            self.values_by_label[label] = value;
+            
+            // See whether we need to set the currently chosen option:
+            if (!has_initial_selection && $option.attr('selected')) {
+                self.current_selection.text(label);
+                has_initial_selection = true;
+            }
+        });
+    	 
+    },
+    destroy: function () {
         this.element.show();
         this.suggestions.remove();
         this.input.remove();
