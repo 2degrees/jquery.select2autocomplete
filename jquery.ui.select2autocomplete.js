@@ -91,7 +91,7 @@ $.widget('ui.select2autocomplete', {
                     event.preventDefault();
                     return;
                 case keyCode.ESCAPE:
-                    selUSERNAME_REPLACE_STRINGons();
+                    self.hide_suggestions();
                     self.stop_input_capture();
                     return;
                 case keyCode.ENTER:
@@ -126,7 +126,7 @@ $.widget('ui.select2autocomplete', {
             }
             
             $.each(hits, function (index, result) {
-                var $result = $('<li />', {'class': 's2ac-result', 'USERNAME_REPLACE_STRING-value': result[0], text: result[1]});
+                var $result = $('<li />', {'class': 's2ac-result', 'data-value': result[0], text: result[1]});
                 $result.bind('mousedown.select2autocomplete', function (event) {
                     setTimeout(function () {
                         clearTimeout(self.closing);
@@ -167,6 +167,7 @@ $.widget('ui.select2autocomplete', {
         }).bind('blur.select2autocomplete', function (event) {
             self.closing = setTimeout(function () {
                 self.hide_suggestions();
+                self.stop_input_capture();
             }, 150);
         });
     },
