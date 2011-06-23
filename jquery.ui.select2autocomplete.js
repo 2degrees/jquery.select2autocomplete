@@ -172,12 +172,15 @@ $.widget('ui.select2autocomplete', {
         });
     },
     sync: function () {
-    	// (Re)set the data which can be searched for based on the original 
-    	//select's options
-    	var self = this,
-    		has_initial_selection = false;
-    	
-    	// Iterate over the options in the select and convert them into an a
+        // (Re)set the data which can be searched for based on the original 
+        // select's options
+        var self = this,
+            has_initial_selection = false;
+    		
+        // Ensure that the cache is reset in the case of a regeneration
+        self.values_by_label = {};
+            	
+        // Iterate over the options in the select and convert them into an a
         // sorted list of lower-case labels and an object of values keyed off
         // the label (real case!):
         this.element.children('option').each(function (index, option) {
