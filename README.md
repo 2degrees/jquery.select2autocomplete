@@ -14,7 +14,7 @@ Either include the file after jQuery and jQuery UI:
 or use it as an AMD module:
 
 ``` javascript
-require(['jquery', 'jquery.select2autocomplete.js'], function ($) {
+require(['jquery', 'jquery.select2autocomplete'], function ($) {
   $(function () {
     $(...).select2autocomplete();
   });
