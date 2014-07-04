@@ -1,7 +1,7 @@
 /*
 * jQuery UI select2autocomplete
 *
-* Copyright (c) 2011, 2degrees Limited <egoddard@tech.2degreesnetwork.com>.
+* Copyright (c) 2011-2014, 2degrees Limited <egoddard@tech.2degreesnetwork.com>.
 * All Rights Reserved.
 *
 * This file is part of jquery.select2autocomplete
@@ -18,7 +18,15 @@
 * jquery.ui.widget.js
 */
 
-(function($, undefined) {
+(function (factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD
+        define(['jquery', 'jquery.ui'], factory);
+    } else {
+        // Browser globals
+        factory(jQuery);
+    }
+}(function($) {
 
 $.widget('ui.select2autocomplete', {
     options: {
@@ -295,4 +303,4 @@ $.widget('ui.select2autocomplete', {
 });
 
 
-})(jQuery);
+}));
